@@ -18,20 +18,19 @@ document.body.appendChild(app.view);
 
 // ============================     BACKGROUND    >>> ============================
 createBackground(container, app, screenWidth);
-return
-const scaleRatio = Math.min(
-    app.screen.width / screenWidth,
-    app.screen.height / calculatorScreenHeight(screenWidth)
-);
+// const scaleRatio = Math.min(
+//     app.screen.width / screenWidth,
+//     app.screen.height / calculatorScreenHeight(screenWidth)
+// );
 
-// ============================    CURSOR MOUSE    >>> ===========================
-SettingCursor(app);
-// ============================    IMPORT VOICE    >>> ===========================
-SettingSound();
-// ============================  MUSIC BACKGROUND >>> ============================
-SettingMusicBackground(container,app, scaleRatio);
-// ============================ BUTTON START GAME >>> ============================
-// btnStartGame(app)
+// // ============================    CURSOR MOUSE    >>> ===========================
+// SettingCursor(app);
+// // ============================    IMPORT VOICE    >>> ===========================
+// SettingSound();
+// // ============================  MUSIC BACKGROUND >>> ============================
+// SettingMusicBackground(container,app, scaleRatio);
+// // ============================ BUTTON START GAME >>> ============================
+// // btnStartGame(app)
 
-// loi tat
-startGame(container, app, scaleRatio);
+// // loi tat
+// startGame(container, app, scaleRatio);
