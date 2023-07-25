@@ -28,7 +28,7 @@ function _createCard() {
                     break;
             }
             totalCards.push({
-                src: `src/assets/cards/${typeCard[i]}${y}.png`,
+                src: `assets/cards/${typeCard[i]}${y}.png`,
                 owner: null,
                 number: y,
                 type,

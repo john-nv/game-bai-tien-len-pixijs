@@ -11,14 +11,14 @@ export function SettingMusicBackground(container, app, scaleRatio) {
     // sound.play('music_bg', {loop: true})
     // ==================== MUSIC BACKGROUND <<< =====================
     const buttonMusicBg = new CreateButtonSpriteImage(
-        'src/assets/image/btnMusic.png',
+        'assets/image/btnMusic.png',
         scaleRatio,
         0.5,
         (app.screen.width * 1.03) - app.screen.width,
         (app.screen.height * 1.04) - app.screen.height
     )
     const buttonMusicGame = new CreateButtonSpriteImage(
-        'src/assets/image/btnMusicGame.png',
+        'assets/image/btnMusicGame.png',
         scaleRatio,
         0.5,
         (app.screen.width * 1.065) - app.screen.width,

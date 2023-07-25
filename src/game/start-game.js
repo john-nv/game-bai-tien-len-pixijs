@@ -97,7 +97,7 @@ export function startGame(container, app, scaleRatio) {
 
     async function _dealCardPlayer(cardsArray, cornerX, cornerY, offsetX, offsetY, format) {
         try {
-            const hiddenCardTexture = PIXI.Texture.from('src/assets/cards/hidden.png');
+            const hiddenCardTexture = PIXI.Texture.from('assets/cards/hidden.png');
             const animationPromises = [];
             for (let index = cardsArray.length - 1; index >= 0; index--) {
                 let card = cardsArray[index].src;

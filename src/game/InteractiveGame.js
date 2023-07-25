@@ -22,9 +22,9 @@ export async function InteractiveGame(containerGame, appGame, scaleRatioPayload,
     scaleRatio = scaleRatioPayload;
     container = containerGame
     app = appGame
-    const urlGoCard = 'src/assets/image/danh.png'
-    const urlNextCard = 'src/assets/image/bo.png'
-    const urlSortCard = 'src/assets/image/xep.png'
+    const urlGoCard = 'assets/image/danh.png'
+    const urlNextCard = 'assets/image/bo.png'
+    const urlSortCard = 'assets/image/xep.png'
 
     const nextCardSprite = CreateButtonSpriteImage(
         urlNextCard,

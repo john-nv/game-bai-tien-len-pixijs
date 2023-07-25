@@ -4,7 +4,7 @@ import gsap from 'gsap'
 import { TextCountDownStartGame } from './countDown-start'
 
 export function btnStartGame(container) {
-    const buttonPlayGame = PIXI.Sprite.from('src/assets/image/btnPlay.png');
+    const buttonPlayGame = PIXI.Sprite.from('assets/image/btnPlay.png');
     buttonPlayGame.scale.set(0.5);
     buttonPlayGame.anchor.set(0.5);
     buttonPlayGame.x = (app.screen.width) / 2;
