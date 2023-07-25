@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 
 export function createBackground(container, app, ScreenWidth) {
-    const background = PIXI.Sprite.from('/src/assets/image/background/bg-1.png');
+    const background = PIXI.Sprite.from('assets/image/background/bg-1.png');
     const ScreenHeight = calculatorScreenHeight(ScreenWidth);
     let newScreenWidth;
     let newScreenHeight;
@@ -15,7 +15,7 @@ export function createBackground(container, app, ScreenWidth) {
         newScreenHeight;
         if (newScreenWidth < ScreenWidth) {
             newScreenHeight = calculatorScreenHeight(newScreenWidth)
-        } else {
+        } else {    
             newScreenWidth = ScreenWidth
             newScreenHeight = ScreenHeight
             console.log()
