@@ -3,7 +3,7 @@ import * as PIXI from 'pixi.js';
 import gsap from 'gsap'
 import { TextCountDownStartGame } from './countDown-start'
 
-export function btnStartGame(container) {
+export function btnStartGame(container, app, scaleRatio) {
     const buttonPlayGame = PIXI.Sprite.from('assets/image/btnPlay.png');
     buttonPlayGame.scale.set(0.5);
     buttonPlayGame.anchor.set(0.5);
@@ -22,9 +22,9 @@ export function btnStartGame(container) {
         sound.play('btn_click', { volume: 2 })
         gsap.to(buttonPlayGame, {
             duration: 0.3, alpha: 0, onComplete: () => {
-                app.stage.removeChild(buttonPlayGame);
+                container.removeChild(buttonPlayGame);
                 // === TEXT COUNTDOWN START IN GAME >>> ====
-                TextCountDownStartGame(container)
+                TextCountDownStartGame(container, app, scaleRatio)
             }
         });
     }

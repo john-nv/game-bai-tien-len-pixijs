@@ -3,7 +3,7 @@ import { sound } from '@pixi/sound';
 import * as PIXI from 'pixi.js';
 import { startGame } from './start-game';
 
-export function TextCountDownStartGame(container) {
+export function TextCountDownStartGame(container, app, scaleRatio) {
     const style = new PIXI.TextStyle({
         fontFamily: 'Arial',
         fontSize: 45,
@@ -28,8 +28,8 @@ export function TextCountDownStartGame(container) {
                 setTimeout(updateCountdown, 1000);
             } else {
                 sound.play('bridging_card', { volume: 2 })
-                app.stage.removeChild(text);
-                startGame(container)
+                container.removeChild(text);
+                startGame(container, app, scaleRatio)
             }
         }
     }
