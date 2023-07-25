@@ -18,6 +18,7 @@ document.body.appendChild(app.view);
 
 // ============================     BACKGROUND    >>> ============================
 createBackground(container, app, screenWidth);
+return
 const scaleRatio = Math.min(
     app.screen.width / screenWidth,
     app.screen.height / calculatorScreenHeight(screenWidth)
