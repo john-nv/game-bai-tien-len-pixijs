@@ -8,13 +8,15 @@ import { SettingSound } from './setting/import-voice'
 import { SettingCursor } from './setting/cursor'
 import { calculatorScreenHeight } from './setting/background';
 
-const screenWidth = 1400
+const screenWidth = 1500
 const screenHeight = calculatorScreenHeight(screenWidth)
 
 const app = new PIXI.Application({ autoDensity: true, width: screenWidth, height: screenHeight });
 const container = new PIXI.Container()
 app.stage.addChild(container);
-document.body.appendChild(app.view);
+console.log(screenWidth)
+console.log(screenHeight)
+document.getElementById("app").appendChild(app.view)
 
 // ============================     BACKGROUND    >>> ============================
 createBackground(container, app, screenWidth);

@@ -8,7 +8,7 @@ export function SettingMusicBackground(container, app, scaleRatio) {
     let isCheckBtnBg = true;
     let isCheckBtnMusic = true;
     // ===================== MUSIC BACKGROUND >>> ====================
-    sound.play('music_bg', {loop: true})
+    // sound.play('music_bg', {loop: true})
     // ==================== MUSIC BACKGROUND <<< =====================
     const buttonMusicBg = new CreateButtonSpriteImage(
         'assets/image/btnMusic.png',

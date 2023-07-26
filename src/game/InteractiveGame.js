@@ -1,43 +1,41 @@
 import * as PIXI from 'pixi.js'
-// import { sound } from '@pixi/sound';
-// import gsap from 'gsap'
-import { transportArray } from '../util/array';
-import { CreateButtonSpriteImage } from '../util/pixi-util/createButton';
-import { onButtonHandle } from '../util/pixi-util/handle-button'; //onButtonOver, onButtonOut, onButtonDown, onButtonUp 
+import { sound } from '@pixi/sound';
+import gsap from 'gsap'
 
+import { CreateButtonSpriteImage } from '../util/pixi-util/createButton';
+import { onButtonHandle } from '../util/pixi-util/handle-button';
+import { removeContainertWithAnimation } from '../util/pixi-util/sprites'
+
+// ============================ variable card >>> ============================
 let cardsPlayer = []
 let scaleRatio = 1
-let killCards = []
-let pendingCards = []
+let killCardsPlayer = []
+let pendingCardsPlayer = []
 let container
 let app
-let disabled = true;
 let nextCard = null;
-let sortCard = null;
 let goCard = null;
 let blurFilterBtnEvent = new PIXI.ColorMatrixFilter();
+const killCardContainer = new PIXI.Container();
+const btnControlCardContainer = new PIXI.Container();
 
+// ============================ start game >>> ============================
 export async function InteractiveGame(containerGame, appGame, scaleRatioPayload, cardsPlayerPayload) {
     cardsPlayer = cardsPlayerPayload;
     scaleRatio = scaleRatioPayload;
-    container = containerGame
+    container = containerGame;
+    container.addChild(killCardContainer);
+    container.addChild(btnControlCardContainer);
+
     app = appGame
     const urlGoCard = 'assets/image/danh.png'
     const urlNextCard = 'assets/image/bo.png'
-    const urlSortCard = 'assets/image/xep.png'
 
     const nextCardSprite = CreateButtonSpriteImage(
         urlNextCard,
         scaleRatio,
         0.5,
-        (app.screen.width * 1.39) - app.screen.width,
-        (app.screen.height * 1.76) - app.screen.height,
-    );
-    const sortCardSprite = CreateButtonSpriteImage(
-        urlSortCard,
-        scaleRatio,
-        0.5,
-        (app.screen.width * 1.52) - app.screen.width,
+        (app.screen.width * 1.45) - app.screen.width,
         (app.screen.height * 1.76) - app.screen.height,
     );
 
@@ -45,57 +43,46 @@ export async function InteractiveGame(containerGame, appGame, scaleRatioPayload,
         urlGoCard,
         scaleRatio,
         0.5,
-        (app.screen.width * 1.64) - app.screen.width,
+        (app.screen.width * 1.58) - app.screen.width,
         (app.screen.height * 1.76) - app.screen.height,
     );
 
     nextCard = nextCardSprite
-    sortCard = sortCardSprite
     goCard = goCardSprite
 
-    container.addChild(nextCard);
-    container.addChild(sortCard);
-    container.addChild(goCard);
+    btnControlCardContainer.addChild(nextCard);
+    btnControlCardContainer.addChild(goCard);
 
-    _updateBtnCardDisabled()
+    _eventCards();
+    _formatCard()
+    _updateBtnCardDisabled();
 }
 
-function eventCards() {
+// ============================ event cards >>> ============================
+function _eventCards() {
     goCard
-        .on('pointerover', onButtonHandle(disabled, goCard, true, 0.1, scaleRatio * 0.98, scaleRatio * 0.98, 0.2, 'btn_hover'))
-        .on('pointerout', onButtonHandle(disabled, goCard, true, 0.1, scaleRatio, scaleRatio, 0.2, 'btn_hover'))
-        .on('pointerdown', onButtonHandle(disabled, goCard, true, 0.1, scaleRatio * 0.95, scaleRatio * 0.95, 0.3, 'dealCardPlayer', (a) => {
-            a = 'danh bai'
-            console.log(a)
+        .on('pointerover', onButtonHandle(goCard, true, 0.1, scaleRatio * 0.98, scaleRatio * 0.98, 0.2, 'btn_hover'))
+        .on('pointerout', onButtonHandle(goCard, true, 0.1, scaleRatio, scaleRatio, 0.2, 'btn_hover'))
+        .on('pointerdown', onButtonHandle(goCard, true, 0.1, scaleRatio * 0.95, scaleRatio * 0.95, 0.3, 'dealCardPlayer', (a) => {
+            _killCardsPlayerPlayer()
         }))
-        .on('pointerup', onButtonHandle(disabled, goCard, true, 0.1, scaleRatio, scaleRatio, 0, undefined))
-        .on('pointerupoutside', onButtonHandle(disabled, goCard, true, 0.1, scaleRatio, scaleRatio, 0, undefined))
+        .on('pointerup', onButtonHandle(goCard, true, 0.1, scaleRatio, scaleRatio, 0, undefined))
+        .on('pointerupoutside', onButtonHandle(goCard, true, 0.1, scaleRatio, scaleRatio, 0, undefined))
 
     nextCard
-        .on('pointerover', onButtonHandle(disabled, nextCard, true, 0.1, scaleRatio * 0.98, scaleRatio * 0.98, 0.2, 'btn_hover'))
-        .on('pointerout', onButtonHandle(disabled, nextCard, true, 0.1, scaleRatio, scaleRatio, 0.2, 'btn_hover'))
-        .on('pointerdown', onButtonHandle(disabled, nextCard, true, 0.1, scaleRatio * 0.95, scaleRatio * 0.95, 0.3, 'btn_click_1', (a) => {
+        .on('pointerover', onButtonHandle(nextCard, true, 0.1, scaleRatio * 0.98, scaleRatio * 0.98, 0.2, 'btn_hover'))
+        .on('pointerout', onButtonHandle(nextCard, true, 0.1, scaleRatio, scaleRatio, 0.2, 'btn_hover'))
+        .on('pointerdown', onButtonHandle(nextCard, true, 0.1, scaleRatio * 0.95, scaleRatio * 0.95, 0.3, 'btn_click_1', (a) => {
             a = 'bo bai'
             console.log(a)
         }))
-        .on('pointerup', onButtonHandle(disabled, nextCard, true, 0.1, scaleRatio, scaleRatio, 0, undefined))
-        .on('pointerupoutside', onButtonHandle(disabled, nextCard, true, 0.1, scaleRatio, scaleRatio, 0, undefined))
-
-
-    sortCard
-        .on('pointerover', onButtonHandle(disabled, sortCard, true, 0.1, scaleRatio * 0.98, scaleRatio * 0.98, 0.2, 'btn_hover'))
-        .on('pointerout', onButtonHandle(disabled, sortCard, true, 0.1, scaleRatio, scaleRatio, 0.2, 'btn_hover'))
-        .on('pointerdown', onButtonHandle(disabled, sortCard, true, 0.1, scaleRatio * 0.95, scaleRatio * 0.95, 0.3, 'btn_click_1', (a) => {
-            a = 'xep bai'
-            console.log(a)
-        }))
-        .on('pointerup', onButtonHandle(disabled, sortCard, true, 0.1, scaleRatio, scaleRatio, 0, undefined))
-        .on('pointerupoutside', onButtonHandle(disabled, sortCard, true, 0.1, scaleRatio, scaleRatio, 0, undefined))
+        .on('pointerup', onButtonHandle(nextCard, true, 0.1, scaleRatio, scaleRatio, 0, undefined))
+        .on('pointerupoutside', onButtonHandle(nextCard, true, 0.1, scaleRatio, scaleRatio, 0, undefined))
 }
 
+// ============================ cards on click >>> ============================
 export function onCardClick(cardItem) {
-    console.log(cardsPlayer)
-    if(!goCard || !sortCard || !nextCard) return
+    if (!goCard || !nextCard) return
     if (cardItem.canClick && cardsPlayer.length > 0) {
         if (!cardItem.clicked) {
             _getCardToPending(cardItem, true)
@@ -110,32 +97,129 @@ export function onCardClick(cardItem) {
     _updateBtnCardDisabled()
 }
 
+// ============================ send cards player to cards pending >>> ============================
 function _getCardToPending(payload, isSetPending = true) {
     if (isSetPending) {
-        pendingCards.push(payload)
+        pendingCardsPlayer.push(payload)
     } else {
-        const index = pendingCards.indexOf(payload)
-        pendingCards.splice(index, 1)
+        const index = pendingCardsPlayer.indexOf(payload)
+        pendingCardsPlayer.splice(index, 1)
 
     }
 }
 
+// ============================ update disable button event >>> ============================
 function _updateBtnCardDisabled() {
-    if (pendingCards.length > 0) {
-        disabled = false;
+    if (pendingCardsPlayer.length > 0) {
         blurFilterBtnEvent.brightness(1);
         goCard.interactive = true;
         nextCard.interactive = true;
-        sortCard.interactive = true;
     } else {
-        disabled = true;
         blurFilterBtnEvent.brightness(0.8);
         goCard.interactive = false;
         nextCard.interactive = false;
-        sortCard.interactive = false;
+        if (cardsPlayer.length < 1) {
+            removeContainertWithAnimation(btnControlCardContainer, 1.5)
+        }
     }
     nextCard.filters = [blurFilterBtnEvent];
-    sortCard.filters = [blurFilterBtnEvent];
     goCard.filters = [blurFilterBtnEvent];
-    eventCards();
+}
+
+
+// ============================ kill cards player (pending X) >>> ============================
+async function _killCardsPlayerPlayer() {
+    if (!pendingCardsPlayer || pendingCardsPlayer.length === 0) return;
+    removeContainertWithAnimation(killCardContainer, 0)
+    await _moveCards(killCardContainer, pendingCardsPlayer)
+    killCardsPlayer = pendingCardsPlayer
+    cardsPlayer = await _removePendingCardsPlayer(cardsPlayer, pendingCardsPlayer)
+    _formatCard()
+    pendingCardsPlayer = []
+    _updateBtnCardDisabled()
+}
+
+async function _removePendingCardsPlayer(arrayPlayer, arraySplice) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            for (let i = arrayPlayer.length - 1; i >= 0; i--) {
+                if (arraySplice.includes(arrayPlayer[i])) {
+                    arrayPlayer.splice(i, 1);
+                }
+            }
+            resolve(arrayPlayer);
+        } catch (error) {
+            reject('error');
+        }
+    });
+}
+
+// ============================ move cards (kill and soft) >>> ============================
+async function _moveCards(containerCards, cardsBefore, sortCard) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (cardsBefore.length < 1) return;
+            const screenWidth = app.screen.width;
+            const screenHeight = app.screen.height;
+            const cardOneWidth = cardsBefore[0].width; // cac la bai kick co deu giong nhau
+            const cardSpacing = cardOneWidth - (cardOneWidth * 1.4);
+            const totalWidthCards = (cardOneWidth * cardsBefore.length) + (cardSpacing * (cardsBefore.length - 1));
+            const startX = (screenWidth - totalWidthCards) / 2;
+            cardsBefore = _sortByTypeAndNumberCards(cardsBefore)
+            for (let i = 0; i < cardsBefore.length; i++) {
+                const card = cardsBefore[i];
+                const cardX = startX + (cardOneWidth + cardSpacing) * i + ((cardOneWidth / 2) - cardSpacing);
+                let cardY;
+                const positionBeforeCard = card.position
+                containerCards.addChild(card);
+                if (sortCard === true) {
+                    cardY = card.position.y
+                } else {
+                    cardY = (screenHeight - card.height) / 2;
+                    cardsBefore[i].canClick = false;
+                }
+                if (i === 0) {
+                    sound.play('kill_card', { volume: 0.5 });
+                }
+                gsap.fromTo(
+                    positionBeforeCard,
+                    { x: positionBeforeCard.x, y: positionBeforeCard.y },
+                    { x: cardX, y: cardY, duration: 0.27, ease: 'back.out(1.5)' }
+                );
+            }
+            resolve()
+        } catch (e) {
+            reject('error');
+            console.log(e)
+        }
+    });
+}
+
+// ============================ sort cards >>> ============================
+function _formatCard() {
+    cardsPlayer = _sortByTypeAndNumberCards(cardsPlayer)
+    _moveCards(container, cardsPlayer, true)
+}
+
+function _sortByTypeAndNumberCards(array) {
+    try {
+        array.sort((a, b) => {
+            const typeA = a.info.type;
+            const typeB = b.info.type;
+            if (typeA !== typeB) {
+                return typeA - typeB;
+            }
+        });
+
+        array.sort((a, b) => {
+            const numberA = a.info.number;
+            const numberB = b.info.number;
+            if (numberA !== numberB) {
+                return numberA - numberB;
+            }
+        });
+        return array
+    } catch (error) {
+        console.log(error)
+    }
 }

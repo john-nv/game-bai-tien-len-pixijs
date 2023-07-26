@@ -11,7 +11,7 @@ function _createCard() {
     let totalCards = []
 
     for (let i = 0; i < typeCard.length; i++) {
-        for (let y = 1; y <= 13; y++) {
+        for (let y = 2; y <= 14; y++) {
             let type = null;
             switch (typeCard[i]) {
                 case 'h':

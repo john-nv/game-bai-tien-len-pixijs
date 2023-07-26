@@ -5,7 +5,7 @@ import { TextCountDownStartGame } from './countDown-start'
 
 export function btnStartGame(container, app, scaleRatio) {
     const buttonPlayGame = PIXI.Sprite.from('assets/image/btnPlay.png');
-    buttonPlayGame.scale.set(0.5);
+    buttonPlayGame.scale.set(scaleRatio);
     buttonPlayGame.anchor.set(0.5);
     buttonPlayGame.x = (app.screen.width) / 2;
     buttonPlayGame.y = app.screen.height / 2;
@@ -23,7 +23,7 @@ export function btnStartGame(container, app, scaleRatio) {
         gsap.to(buttonPlayGame, {
             duration: 0.3, alpha: 0, onComplete: () => {
                 container.removeChild(buttonPlayGame);
-                // === TEXT COUNTDOWN START IN GAME >>> ====
+                // ===== TEXT COUNTDOWN START IN GAME >>> ======
                 TextCountDownStartGame(container, app, scaleRatio)
             }
         });
@@ -31,10 +31,10 @@ export function btnStartGame(container, app, scaleRatio) {
 
     function onButtonOver() {
         sound.play('btn_hover', { volume: 2 })
-        gsap.to(buttonPlayGame.scale, { duration: 0.1, x: 0.55, y: 0.55 });
+        gsap.to(buttonPlayGame.scale, { duration: 0.1, x: scaleRatio * 1.1, y: scaleRatio * 1.1 });
     }
     function onButtonOut() {
         sound.play('btn_hover', { volume: 2 })
-        gsap.to(buttonPlayGame.scale, { duration: 0.2, x: 0.5, y: 0.5 });
+        gsap.to(buttonPlayGame.scale, { duration: 0.2, x: scaleRatio, y: scaleRatio });
     }
 }

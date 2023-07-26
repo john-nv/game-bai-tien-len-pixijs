@@ -4,6 +4,7 @@ import gsap from 'gsap'
 import { init } from './init-card'
 import { InteractiveGame, onCardClick } from './InteractiveGame';
 
+// ============================ Contructor Sprite >>> ============================
 export class PlayerCard extends PIXI.Sprite {
     constructor(texture) {
         super(texture);
@@ -19,10 +20,12 @@ export function startGame(container, app, scaleRatio) {
     const screenY = app.screen.height;
     const cardWidth = (screenX * 1.02) - screenX;
     const cardHeight = (screenY * 1.05) - screenY;
-    let CountdealCard = 1
+    let countdealCard = 1
+    let listCardPlayer = []
 
     _beforeDealCardPlayer()
 
+// ============================ deal Card >>> ============================
     function _beforeDealCardPlayer() {
         _dealCardPlayer(
             cards[0],
@@ -61,6 +64,7 @@ export function startGame(container, app, scaleRatio) {
         );
     }
 
+// ============================ move Card  a -> b >>> ============================
     function _moveSpriteToPosition(sprite, targetX, targetY, delay, nextTexture, filter, isVoiceLast, resolve) {
         gsap.to(sprite, {
             x: targetX,
@@ -95,7 +99,9 @@ export function startGame(container, app, scaleRatio) {
         });
     }
 
-    async function _dealCardPlayer(cardsArray, cornerX, cornerY, offsetX, offsetY, format) {
+
+// ============================ deal Card  and index player >>> ============================
+    async function _dealCardPlayer(cardsArray, cornerX, cornerY, offsetX, offsetY, formatIndexPlayer) {
         try {
             const hiddenCardTexture = PIXI.Texture.from('assets/cards/hidden.png');
             const animationPromises = [];
@@ -115,13 +121,14 @@ export function startGame(container, app, scaleRatio) {
                 container.addChild(cardItem);
                 // check and set permission player owner
                 if (cardsArray[index].owner == 0) {
+                    listCardPlayer.push(cardItem)
                     cardItem.canClick = true
                     cardItem.info = cardsArray[index]
                     cardTexture = PIXI.Texture.from(card);
                     filter = true
                 }
 
-                if (format) {
+                if (formatIndexPlayer) {
                     targetX = cornerX + Math.floor(index / cardsArray.length) * (cardWidth + cardHeight / 3) * offsetX;
                     targetY = cornerY + (index % cardsArray.length) * (cardHeight + cardHeight / 6) * offsetY;
                 } else {
@@ -138,11 +145,11 @@ export function startGame(container, app, scaleRatio) {
                 cardItem.on('pointerdown', () => onCardClick(cardItem));
             }
             await Promise.all(animationPromises);
-            console.log('====== Deal cards DONE ======')
+            // console.log('====== Deal cards DONE ======')
             // create button in game
-            CountdealCard++
-            if (CountdealCard == cards.length) {
-                InteractiveGame(container, app, scaleRatio, cards[0])
+            countdealCard++
+            if (countdealCard == cards.length) {
+                InteractiveGame(container, app, scaleRatio, listCardPlayer)
             }
 
         } catch (error) {

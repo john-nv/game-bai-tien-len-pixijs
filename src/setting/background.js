@@ -20,8 +20,11 @@ export function createBackground(container, app, ScreenWidth) {
             newScreenHeight = ScreenHeight
             console.log()
         }
+        console.log(newScreenWidth)
+        console.log(newScreenHeight)
         background.width = newScreenWidth;
         background.height = newScreenHeight;
+        
         app.renderer.resize(newScreenWidth, newScreenHeight);
     }
 }

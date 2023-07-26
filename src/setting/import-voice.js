@@ -8,4 +8,5 @@ export function SettingSound() {
     sound.add('btn_hover', 'assets/voice/hover_btn.ogg');
     sound.add('music_bg', 'assets/voice/music-bg-2.mp3');
     sound.add('bridging_card', 'assets/voice/bridging-cards.wav');
+    sound.add('kill_card', 'assets/voice/card-sounds.mp3');
 }
