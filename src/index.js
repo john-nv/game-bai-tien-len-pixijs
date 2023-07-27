@@ -7,6 +7,7 @@ import { startGame } from './game/start-game';
 import { SettingSound } from './setting/import-voice'
 import { SettingCursor } from './setting/cursor'
 import { calculatorScreenHeight } from './setting/background';
+import { ControlGame } from './game/control-game';
 
 const screenWidth = 1500
 const screenHeight = calculatorScreenHeight(screenWidth)
@@ -32,7 +33,9 @@ SettingSound();
 // ============================  MUSIC BACKGROUND >>> ============================
 SettingMusicBackground(container, app, scaleRatio);
 // ============================ BUTTON START GAME >>> ============================
-btnStartGame(container, app, scaleRatio)
+// btnStartGame(container, app, scaleRatio)
 
-// // loi tat
+ControlGame(container, app, scaleRatio)
+
+// // loi tat vao thang game
 // startGame(container, app, scaleRatio);

@@ -7,6 +7,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Vite App</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bungee+Spice&display=swap');
+
     * {
       padding: 0;
       margin: 0;
@@ -14,9 +16,10 @@
     }
 
     body {
+      font-family: 'Handjet', sans-serif;
       background-color: white;
       text-align: center;
-      /* background-image: url('https://i.pinimg.com/1200x/de/eb/7e/deeb7ef3260c350c7da2a3ba8f2a47c2.jpg'); */
+      background-image: url('https://i.pinimg.com/1200x/de/eb/7e/deeb7ef3260c350c7da2a3ba8f2a47c2.jpg');
       background-size: cover;
       background-position: center;
       height: 100%;
@@ -27,11 +30,35 @@
       margin-top: 20px;
       margin-bottom: 20px;
     }
+
+    .login-container {
+      /* position: absolute;
+      top: 50%;
+      left: 50%; */
+      /* transform: translate(-50%, -50%); */
+      background-color: #f0f0f0;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    input,
+    button {
+      display: block;
+      margin: 10px 0;
+      padding: 5px;
+    }
   </style>
 </head>
 
 <body>
   <div id="app"></div>
+  <div class="login-container">
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
   <script type="module" src="/src/index.js"></script>
 </body>
 

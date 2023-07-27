@@ -5,7 +5,7 @@ import { startGame } from './start-game';
 
 export function TextCountDownStartGame(container, app, scaleRatio) {
     const style = new PIXI.TextStyle({
-        fontFamily: 'Arial',
+        fontFamily: 'Bungee Spice',
         fontSize: scaleRatio * 45,
         fill: '#ffffff',
     });

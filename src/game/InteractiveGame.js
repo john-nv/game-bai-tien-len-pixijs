@@ -5,6 +5,7 @@ import gsap from 'gsap'
 import { CreateButtonSpriteImage } from '../util/pixi-util/createButton';
 import { onButtonHandle } from '../util/pixi-util/handle-button';
 import { removeContainertWithAnimation } from '../util/pixi-util/sprites'
+import { ControlGame } from './control-game';
 
 // ============================ variable card >>> ============================
 let cardsPlayer = []
@@ -13,17 +14,22 @@ let killCardsPlayer = []
 let pendingCardsPlayer = []
 let container
 let app
-let nextCard = null;
-let goCard = null;
+let nextCard;
+let btn_exit_game;
+let goCard;
 let blurFilterBtnEvent = new PIXI.ColorMatrixFilter();
 const killCardContainer = new PIXI.Container();
 const btnControlCardContainer = new PIXI.Container();
 
 // ============================ start game >>> ============================
 export async function InteractiveGame(containerGame, appGame, scaleRatioPayload, cardsPlayerPayload) {
+    const texturePlayingScreen = PIXI.Texture.from('assets/image/playingScreen.png');
+    const btn_exit_game_crop = new PIXI.Rectangle(1140, 30, 71, 71);
+    const btn_exit_game_crop_Texture = new PIXI.Texture(texturePlayingScreen.baseTexture, btn_exit_game_crop);
+
+    container = containerGame;
     cardsPlayer = cardsPlayerPayload;
     scaleRatio = scaleRatioPayload;
-    container = containerGame;
     container.addChild(killCardContainer);
     container.addChild(btnControlCardContainer);
 
@@ -35,21 +41,31 @@ export async function InteractiveGame(containerGame, appGame, scaleRatioPayload,
         urlNextCard,
         scaleRatio,
         0.5,
-        (app.screen.width * 1.45) - app.screen.width,
-        (app.screen.height * 1.76) - app.screen.height,
+        app.screen.width * 0.45,
+        app.screen.height * 0.79,
     );
 
     const goCardSprite = CreateButtonSpriteImage(
         urlGoCard,
         scaleRatio,
         0.5,
-        (app.screen.width * 1.58) - app.screen.width,
-        (app.screen.height * 1.76) - app.screen.height,
+        app.screen.width * 0.58,
+        app.screen.height * 0.79,
     );
+
+
+    btn_exit_game = new CreateButtonSpriteImage(
+        btn_exit_game_crop_Texture,
+        scaleRatio,
+        0.5,
+        app.screen.width * 0.96,
+        app.screen.height * 0.06,
+    )
 
     nextCard = nextCardSprite
     goCard = goCardSprite
-
+    
+    container.addChild(btn_exit_game) // TEST
     btnControlCardContainer.addChild(nextCard);
     btnControlCardContainer.addChild(goCard);
 
@@ -60,6 +76,13 @@ export async function InteractiveGame(containerGame, appGame, scaleRatioPayload,
 
 // ============================ event cards >>> ============================
 function _eventCards() {
+    btn_exit_game
+        .on('pointerover', onButtonHandle(btn_exit_game, true, 0.1, scaleRatio * 0.98, scaleRatio * 0.98, 1, 'btn_hover'))
+        .on('pointerout', onButtonHandle(btn_exit_game, true, 0.1, scaleRatio, scaleRatio, 0.2, 'btn_hover'))
+        .on('pointerdown', onButtonHandle(btn_exit_game, true, 0.1, scaleRatio * 0.95, scaleRatio * 0.95, 1, 'btn_click_1', (a) => {
+            removeContainertWithAnimation(container)
+        }))
+
     goCard
         .on('pointerover', onButtonHandle(goCard, true, 0.1, scaleRatio * 0.98, scaleRatio * 0.98, 0.2, 'btn_hover'))
         .on('pointerout', onButtonHandle(goCard, true, 0.1, scaleRatio, scaleRatio, 0.2, 'btn_hover'))
@@ -120,6 +143,7 @@ function _updateBtnCardDisabled() {
         nextCard.interactive = false;
         if (cardsPlayer.length < 1) {
             removeContainertWithAnimation(btnControlCardContainer, 1.5)
+            // container.addChild(btn_exit_game)
         }
     }
     nextCard.filters = [blurFilterBtnEvent];
