@@ -114,7 +114,6 @@ export function startGame(container, app, scaleRatio) {
         });
     }
 
-
     // ============================ deal Card  and index player >>> ============================
     async function _dealCardPlayer(cardsArray, cornerX, cornerY, offsetX, offsetY, formatIndexPlayer) {
         try {

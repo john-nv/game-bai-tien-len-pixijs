@@ -182,9 +182,8 @@ function _eventControl() {
             gsap.to(btn_test_game, {
                 duration: 0.3, alpha: 0, onComplete: () => {
                     // ===== TEXT COUNTDOWN START IN GAME >>> ======
-                    TextCountDownStartGame(container, app, scaleRatio)
+                    TextCountDownStartGame(containerControl, app, scaleRatio)
                 }
             });
         }))
-
 }
