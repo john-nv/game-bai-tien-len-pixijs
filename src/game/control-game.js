@@ -7,8 +7,10 @@ import { btnStartGame } from './button-start-game';
 import { removeContainertWithAnimation } from '../util/pixi-util/sprites';
 import { SearchTable } from './search-table-game';
 import { TextCountDownStartGame } from './countDown-start';
+import { SpinGame } from './spin';
 
 const containerControl = new PIXI.Container();
+const containerButton = new PIXI.Container();
 
 let screenWidth = 0;
 let screenHeight = 0;
@@ -28,6 +30,14 @@ let text_test_game
 let text_countdown_spin
 let container
 let app
+// ========= SPIN =========
+let isBtnOneVisible = true;
+let remainingTime = 2;
+const toggleInterval = 400;
+let startSpin = false;
+// ========================
+const texturePlayingScreen = PIXI.Texture.from('assets/image/playingScreen.png');
+const homeScreen = PIXI.Texture.from('assets/image/homeScreen.png');
 
 export function ControlGame(containerGame, appGame, scaleRatioGame) {
     container = containerGame
@@ -37,20 +47,19 @@ export function ControlGame(containerGame, appGame, scaleRatioGame) {
     screenHeight = app.screen.height;
 
     container.addChild(containerControl)
+    container.addChild(containerButton)
     _createBtn()
 
     // test
-    // btnStartGame(container, app, scaleRatio, containerControl)
+    // SpinGame(containerControl, containerButton, app, scaleRatio)
 }
+
 function _createBtn() {
     const blurFilter = new PIXI.BlurFilter();
     blurFilter.blur = 1;
-    const texturePlayingScreen = PIXI.Texture.from('assets/image/playingScreen.png');
-    const homeScreen = PIXI.Texture.from('assets/image/homeScreen.png');
-
-    const btn_Search_crop = new PIXI.Rectangle(0, 1042, 140, 105);
     const spin_crop_one = new PIXI.Rectangle(1550, 743, 240, 96);
     const spin_crop_two = new PIXI.Rectangle(826, 85, 240, 96);
+    const btn_Search_crop = new PIXI.Rectangle(0, 1042, 140, 105);
     const btn_friend_crop = new PIXI.Rectangle(0, 1147, 147, 105);
     const bg_btn_crop = new PIXI.Rectangle(709, 217, 250, 300);
 
@@ -58,6 +67,7 @@ function _createBtn() {
     const btnSpinOne = new PIXI.Texture(homeScreen.baseTexture, spin_crop_one);
     const btnSpinTwo = new PIXI.Texture(homeScreen.baseTexture, spin_crop_two);
     const btnFriend = new PIXI.Texture(texturePlayingScreen.baseTexture, btn_friend_crop);
+    // const btnFriend = new PIXI.Texture(spinScreen.baseTexture, btn_friend_crop);
     const backgroundBtnFriend = new PIXI.Texture(texturePlayingScreen.baseTexture, bg_btn_crop);
     const backgroundBtnSearch = new PIXI.Texture(texturePlayingScreen.baseTexture, bg_btn_crop);
 
@@ -67,17 +77,16 @@ function _createBtn() {
         scaleRatio,
         0.5,
         screenWidth / 2,
-        screenHeight - (btnSpinOne.height / 2),
+        screenHeight - (btnSpinOne.height * scaleRatio / 2),
         false,
     )
-
 
     btnSpin_two = new CreateButtonSpriteImage(
         btnSpinTwo,
         scaleRatio,
         0.5,
         screenWidth / 2,
-        screenHeight - (btnSpinOne.height / 2),
+        screenHeight - (btnSpinOne.height * scaleRatio / 2),
         false,
     )
     // ============================== SPIN <<< ==============================
@@ -146,9 +155,11 @@ function _createBtn() {
     text_countdown_spin = new PIXI.Text('--:--', textStyle);
 
     text_countdown_spin.alpha = 1;
+    text_countdown_spin.interactive = true;
+    text_countdown_spin.cursor = 'hover';
     text_countdown_spin.anchor.set(0.5);
     text_countdown_spin.x = btnSpin_one.x;
-    text_countdown_spin.y = screenHeight - (btnSpinOne.height / 4);
+    text_countdown_spin.y = screenHeight - (btnSpinOne.height * scaleRatio / 4);
 
     text_test_game.alpha = 1;
     text_test_game.anchor.set(0.5);
@@ -166,31 +177,29 @@ function _createBtn() {
     text_search.y = screenHeight * 0.6;
 
 
-    // background_control.filters = [blurFilter]
-    containerControl.addChild(background_control_search)
-    containerControl.addChild(background_control_friend)
-    containerControl.addChild(background_control_start)
-    containerControl.addChild(img_friends);
-    containerControl.addChild(img_search);
-    containerControl.addChild(btn_test_game);
-    containerControl.addChild(btnSpin_one)
-    containerControl.addChild(btnSpin_two)
-    containerControl.addChild(text_countdown_spin)
-    _eventControl()
+    // containerButton.filters = [blurFilter]
+    containerButton.addChild(background_control_search)
+    containerButton.addChild(background_control_friend)
+    containerButton.addChild(background_control_start)
+    containerButton.addChild(img_friends);
+    containerButton.addChild(img_search);
+    containerButton.addChild(btn_test_game);
+    containerButton.addChild(btnSpin_one)
+    containerButton.addChild(btnSpin_two)
+    containerButton.addChild(text_countdown_spin)
+    _eventButton()
     _autoSpin()
 }
 
-function _eventControl() {
+function _eventButton() {
     img_search
         .on('pointerover', onButtonHandle(img_search, true, 0.1, scaleRatio * 0.98, scaleRatio * 0.98, 1, 'btn_hover', () => {
-            containerControl.addChild(text_search);
+            containerButton.addChild(text_search);
         }))
         .on('pointerout', onButtonHandle(img_search, true, 0.1, scaleRatio, scaleRatio, 0.2, 'btn_hover', () => {
-            containerControl.removeChild(text_search);
+            containerButton.removeChild(text_search);
         }))
         .on('pointerdown', onButtonHandle(img_search, true, 0.1, scaleRatio * 0.95, scaleRatio * 0.95, 1, '', () => {
-            // removeContainertWithAnimation(containerControl)
-            // SearchTable(container, app, scaleRatio)
             alert('find a table')
         }))
         .on('pointerup', onButtonHandle(img_search, true, 0.1, scaleRatio, scaleRatio, 0, undefined))
@@ -198,10 +207,10 @@ function _eventControl() {
 
     img_friends
         .on('pointerover', onButtonHandle(img_friends, true, 0.1, scaleRatio * 0.98, scaleRatio * 0.98, 1, 'btn_hover', () => {
-            containerControl.addChild(text_friends);
+            containerButton.addChild(text_friends);
         }))
         .on('pointerout', onButtonHandle(img_friends, true, 0.1, scaleRatio, scaleRatio, 0.2, 'btn_hover', () => {
-            containerControl.removeChild(text_friends);
+            containerButton.removeChild(text_friends);
         }))
         .on('pointerdown', onButtonHandle(img_friends, true, 0.1, scaleRatio * 0.95, scaleRatio * 0.95, 1, '', () => {
             alert('enter id or create a game table with friends')
@@ -211,32 +220,36 @@ function _eventControl() {
 
     btn_test_game
         .on('pointerover', onButtonHandle(btn_test_game, true, 0.1, scaleRatio * 0.63, scaleRatio * 0.63, 1, 'btn_hover', () => {
-            containerControl.addChild(text_test_game);
+            containerButton.addChild(text_test_game);
         }))
         .on('pointerout', onButtonHandle(btn_test_game, true, 0.1, scaleRatio * 0.65, scaleRatio * 0.65, 1, 'btn_hover', () => {
-            containerControl.removeChild(text_test_game);
+            containerButton.removeChild(text_test_game);
         }))
         .on('pointerdown', onButtonHandle(btn_test_game, true, 0.1, scaleRatio * 0.65, scaleRatio * 0.65, 1, '', () => {
-            removeContainertWithAnimation(containerControl)
+            removeContainertWithAnimation(containerButton)
             sound.play('btn_click', { volume: 2 })
             gsap.to(btn_test_game, {
                 duration: 0.3, alpha: 0, onComplete: () => {
                     // ===== TEXT COUNTDOWN START IN GAME >>> ======
-                    TextCountDownStartGame(containerControl, app, scaleRatio)
+                    TextCountDownStartGame(containerButton, app, scaleRatio)
                 }
             });
+        }))
+
+    text_countdown_spin
+        .on('pointerdown', onButtonHandle(text_countdown_spin, true, 0.1, null, null, 0.5, 'btn_hover', () => {
+            if(startSpin){
+                SpinGame(containerControl,containerButton, app, scaleRatio)
+            }
         }))
 }
 
 function _autoSpin() {
-    let isBtnOneVisible = true;
-    let remainingTime = 10 * 60;
-    const toggleInterval = 400;
-
     function displayTime() {
         const minutes = Math.floor(remainingTime / 60);
         const seconds = remainingTime % 60;
         text_countdown_spin.text = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
     }
 
     function toggleSprites() {
@@ -252,7 +265,8 @@ function _autoSpin() {
         displayTime();
         if (remainingTime <= 0) {
             clearInterval(countdownInterval);
-            text_countdown_spin.text = `done`;
+            text_countdown_spin.text = `quay`;
+            startSpin = true
         }
     }, 1000);
 
