@@ -47,12 +47,11 @@ let isRunResutlSpin = true;
 
 let onSpin = false
 
-export function SpinGame(containerControlGame, containerButtonGame, appGame, scaleRatioGame){
-    if(!onSpin){
-        console.log(0)
+export function SpinGame(containerControlGame, containerButtonGame, appGame, scaleRatioGame) {
+    if (!onSpin) {
         onGame(containerControlGame, containerButtonGame, appGame, scaleRatioGame)
         onSpin = !onSpin
-    }else{
+    } else {
         containerSpin.visible = true
         _hiddenBtnControl()
         _toggleSprites()
@@ -196,9 +195,9 @@ function _createAndEventSpin() {
     arrow_spin.visible = true
     result_one_spin.visible = false
     result_two_spin.visible = false
-    table_result_money.visible = false 
+    table_result_money.visible = false
     text_table_result_money.visible = false
-    btn_exit_table.visible = false 
+    btn_exit_table.visible = false
     text_btn_exit_table.visible = false
     containerSpin.addChild(spin_default)
     containerSpin.addChild(spin_spin1)
@@ -310,6 +309,7 @@ function _showTableResultMoney(money) {
     setInterval(_toggleSpritesResultSpin, 300);
     table_result_money.visible = true;
     text_table_result_money.visible = true
-    btn_exit_table.visible = true 
+    btn_exit_table.visible = true
     text_btn_exit_table.visible = true
+    localStorage.setItem('spin', 0)
 }

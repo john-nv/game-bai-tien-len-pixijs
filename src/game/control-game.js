@@ -34,7 +34,10 @@ let app
 let isBtnOneVisible = true;
 let remainingTime = 2;
 const toggleInterval = 400;
-let startSpin = false;
+let startSpin = localStorage.getItem('spin')
+if(!startSpin || startSpin > 1 || startSpin < 0){
+    localStorage.setItem('spin', 0)
+}
 // ========================
 const texturePlayingScreen = PIXI.Texture.from('assets/image/playingScreen.png');
 const homeScreen = PIXI.Texture.from('assets/image/homeScreen.png');
@@ -187,6 +190,7 @@ function _createBtn() {
     containerButton.addChild(btnSpin_one)
     containerButton.addChild(btnSpin_two)
     containerButton.addChild(text_countdown_spin)
+
     _eventButton()
     _autoSpin()
 }
@@ -238,7 +242,8 @@ function _eventButton() {
 
     text_countdown_spin
         .on('pointerdown', onButtonHandle(text_countdown_spin, true, 0.1, null, null, 0.5, 'btn_hover', () => {
-            if(startSpin){
+            if(startSpin == 1){
+                text_countdown_spin.text = `quay Xong`;
                 SpinGame(containerControl,containerButton, app, scaleRatio)
             }
         }))
@@ -256,6 +261,8 @@ function _autoSpin() {
         btnSpin_one.visible = !isBtnOneVisible;
         btnSpin_two.visible = isBtnOneVisible;
         isBtnOneVisible = !isBtnOneVisible;
+
+        startSpin = localStorage.getItem('spin')
     }
 
     setInterval(toggleSprites, toggleInterval);
@@ -263,10 +270,10 @@ function _autoSpin() {
     const countdownInterval = setInterval(() => {
         remainingTime--;
         displayTime();
-        if (remainingTime <= 0) {
+        if (remainingTime == 0) {
             clearInterval(countdownInterval);
             text_countdown_spin.text = `quay`;
-            startSpin = true
+            localStorage.setItem('spin', 1)
         }
     }, 1000);
 
